@@ -1,6 +1,6 @@
 "use strict";
-import { Client } from "@elastic/elasticsearch"
-import "array.prototype.flatmap"
+import { Client } from "@elastic/elasticsearch";
+import "array.prototype.flatmap";
 
 import corpus from "../corpus.json";
 import keys from "../keys.json";
@@ -33,13 +33,13 @@ async function run() {
       settings: {
         analysis: {
           /**
-           * here the custom icu_tokenizer will be used 
+           * here the custom icu_tokenizer will be used
            * to get a better performance with
            * asian languages
            */
           analyzer: {
             // @ts-ignore
-            my_analyzer_icu: {
+            my_icu_analyzer: {
               type: "custom",
               tokenizer: "icu_tokenizer",
               filter: ["my_ngram_filter", "my_stop_word_filter"],
@@ -72,7 +72,7 @@ async function run() {
             my_stop_word_filter: {
               type: "stop",
               ignore_case: true,
-              stopwords: getStopWords(keys)
+              stopwords: getStopWords(keys),
             },
           },
         },
@@ -83,149 +83,152 @@ async function run() {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Singer_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Lyricist_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Song_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Metaphor_1_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Metaphor_2_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Metaphor_3_Sinhala: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Subject_1: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Subject_2: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Subject_3: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Target_1: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Target_2: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Target_3: {
             type: "text",
             fields: {
               raw: {
-                type: "keyword"
-              }
+                type: "keyword",
+              },
             },
-            analyzer: "my_analyzer_icu",
+            analyzer: "my_icu_analyzer",
           },
           Lyrics: {
-            "type": "text"
+            type: "text",
           },
           Interpretation_1: {
-            "type": "text"
+            type: "text",
           },
           Interpretation_2: {
-            "type": "text"
+            type: "text",
           },
           Interpretation_3: {
-            "type": "text"
+            type: "text",
           },
           Spotify_Plays: {
-            "type": "text"
+            type: "text",
           },
-        }
-      }
+        },
+      },
     },
-  })
+  });
 
-  const operations = corpus.flatMap(document => [{index: {_index: "sinhala_songs_index"}}, document])
-  const bulkResponse = await client.bulk({refresh: true, operations})
+  const operations = corpus.flatMap((document) => [
+    { index: { _index: "sinhala_songs_index" } },
+    document,
+  ]);
+  const bulkResponse = await client.bulk({ refresh: true, operations });
 
   if (bulkResponse.errors) {
-    const erroredDocuments:any[] = []
+    const erroredDocuments: any[] = [];
     // The items array has the same order of the dataset we just indexed.
     // The presence of the `error` key indicates that the operation
     // that we did for the document has failed.
     bulkResponse.items.forEach((action, i) => {
-      const operation = Object.keys(action)[0]
+      const operation = Object.keys(action)[0];
       // @ts-ignore
       if (action[operation].error) {
         erroredDocuments.push({
@@ -237,15 +240,15 @@ async function run() {
           // @ts-ignore
           error: action[operation].error,
           operation: operations[i * 2],
-          document: operations[i * 2 + 1]
-        })
+          document: operations[i * 2 + 1],
+        });
       }
-    })
-    console.log(erroredDocuments)
+    });
+    console.log(erroredDocuments);
   }
 
-  const count = await client.count({ index: 'sinhala_songs_index' })
-  console.log(count)
+  const count = await client.count({ index: "sinhala_songs_index" });
+  console.log(count);
 }
 
 run().catch(console.log);
