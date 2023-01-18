@@ -1,2 +1,5 @@
 /elasticsearch/node_modules
 /elasticsearch/dist
+
+/backend/node_modules
+/backend/dist
