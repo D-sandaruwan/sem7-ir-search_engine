@@ -96,6 +96,10 @@ async function run() {
       },
       mappings: {
         properties: {
+          /**
+           * Specify the main parameters
+           * including full text search
+           */
           Composer_Sinhala: {
             type: "text",
             fields: {
@@ -213,6 +217,10 @@ async function run() {
             },
             analyzer: "my_icu_analyzer",
           },
+          /**
+           * Specify tother parameters
+           * without full text search
+           */
           Lyrics: {
             type: "text",
           },
