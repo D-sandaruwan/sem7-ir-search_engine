@@ -26,6 +26,23 @@ const client = new Client({
   },
 });
 
+/**
+ * Uncomment this if you want to remove the index
+ */
+// client.indices
+//   .delete({
+//     index: "sinhala_songs_index",
+//   })
+//   .then(
+//     function (resp) {
+//       console.log("Successful query!");
+//       console.log(JSON.stringify(resp, null, 4));
+//     },
+//     function (err) {
+//       console.trace(err.message);
+//     }
+//   );
+
 async function run() {
   await client.indices.create({
     index: "sinhala_songs_index",
@@ -209,7 +226,7 @@ async function run() {
             type: "text",
           },
           Spotify_Plays: {
-            type: "text",
+            type: "integer",
           },
         },
       },
