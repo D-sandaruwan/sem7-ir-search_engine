@@ -18,15 +18,13 @@ const client = new Client({
 });
 
 router.post("/search", async (req, res) => {
-  const query: string = req.body.query;
-  const wordsInQuery = query.trim().split(" ");
-  const result = await client.search({
-    index: "sinhala_songs_index",
-    /**
-     * Give indexed documents
-     */
-    _source: {
-      includes: [
+  const artist: string = req.body.artist;
+  const query: string = `${req.body.query} ${artist}`;
+  let gte: any = req.body.gte;
+  let querySearch: any = {
+    multi_match: {
+      query: query.trim(),
+      fields: [
         "Metaphor_1_Sinhala",
         "Metaphor_2_Sinhala",
         "Metaphor_3_Sinhala",
@@ -36,24 +34,65 @@ router.post("/search", async (req, res) => {
         "Target_1",
         "Target_2",
         "Target_3",
+        `Composer_Sinhala${artist ? `^${2}` : ""}`,
+        `Singer_Sinhala${artist ? `^${2}` : ""}`,
+        `Lyricist_Sinhala${artist ? `^${2}` : ""}`,
       ],
     },
-    query: {
-      multi_match: {
-        query: query.trim(),
-        fields: [
-          "Metaphor_1_Sinhala",
-          "Metaphor_2_Sinhala",
-          "Metaphor_3_Sinhala",
-          "Subject_1",
-          "Subject_2",
-          "Subject_3",
-          "Target_1",
-          "Target_2",
-          "Target_3",
+  };
+  if (artist || gte) {
+    querySearch = {
+      bool: {
+        must: [
+          {
+            multi_match: {
+              query: query.trim(),
+              fields: [
+                "Metaphor_1_Sinhala",
+                "Metaphor_2_Sinhala",
+                "Metaphor_3_Sinhala",
+                "Subject_1",
+                "Subject_2",
+                "Subject_3",
+                "Target_1",
+                "Target_2",
+                "Target_3",
+              ],
+            },
+          },
         ],
       },
-    },
+    };
+    if (artist)
+      querySearch.bool.must.push({
+        multi_match: {
+          query: query.trim(),
+          fields: [
+            `Composer_Sinhala${artist ? `^${2}` : ""}`,
+            `Singer_Sinhala${artist ? `^${2}` : ""}`,
+            `Lyricist_Sinhala${artist ? `^${2}` : ""}`,
+          ],
+        },
+      });
+
+    if (gte) {
+      gte = parseInt(gte);
+      querySearch.bool.must.push({
+        range: {
+          Spotify_Plays: {
+            gte,
+            boost: 2.0,
+          },
+        },
+      });
+    }
+  }
+  const result = await client.search({
+    index: "sinhala_songs_index",
+    /**
+     * Give indexed documents
+     */
+    query: querySearch,
   });
   console.log(result.hits.hits);
   res.send({
