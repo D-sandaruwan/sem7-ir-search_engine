@@ -16,6 +16,25 @@ This project is developed under Information Retrieval (second part of the module
 - [https://www.sinhalalyricspedia.com/](https://www.sinhalalyricspedia.com/)
 - [https://open.spotify.com/](https://open.spotify.com)
 
+# Used Corpus Fields
+
+1. **Song_Sinhala** - Song in sinhala language
+2. **Composer_Sinhala** - Composer name in sinhala language
+3. **Singer_Sinhala** - Singer name in sinhala language
+4. **Lyricist_Sinhala** - Lyricist name in sinhala language
+5. **Metaphor_1_Sinhala** - Metaphor 1 in sinhala language
+6. **Subject_1** - Subject of metaphor 1 in sinhala language
+7. **Target_1** - Target of metaphor 1 in sinhala language
+8. **Interpretation_1** - Interpretation of metaphor 1 in sinhala language
+9. **Metaphor_2_Sinhala** - Metaphor 2 in sinhala language
+10. **Subject_2** - Subject of metaphor 2 in sinhala language
+11. **Target_2** - Target of metaphor 2 in sinhala language
+12. **Interpretation_2** - Interpretation of metaphor 2 in sinhala language
+13. **Metaphor_3_Sinhala** - Metaphor 3 in sinhala language
+14. **Subject_3** - Subject of metaphor 3 in sinhala language
+15. **Target_3** - Target of metaphor 3 in sinhala language
+16. **Interpretation_3** - Interpretation of metaphor 3 in sinhala language
+
 # Functionalities
 
  1. **Basic search functionality for metaphor searching.** Using this functionality a user can search songs which have specific metaphors. After searching, user can see a list of songs. The input query specifically looks for each song's **Metaphor_Sinhala**, **Subject_Sinhala** and **Target_Sinhala** fields in the corpus.
