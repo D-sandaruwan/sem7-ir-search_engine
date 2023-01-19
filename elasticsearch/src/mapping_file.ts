@@ -12,6 +12,7 @@ const getStopWords = (keyWords: { [key: string]: string[] }) => {
       stopWords.push(key);
     }
   }
+  console.log(stopWords);
   return stopWords;
 };
 
@@ -25,23 +26,6 @@ const client = new Client({
     rejectUnauthorized: false,
   },
 });
-
-/**
- * Uncomment this if you want to remove the index
- */
-// client.indices
-//   .delete({
-//     index: "sinhala_songs_index",
-//   })
-//   .then(
-//     function (resp) {
-//       console.log("Successful query!");
-//       console.log(JSON.stringify(resp, null, 4));
-//     },
-//     function (err) {
-//       console.trace(err.message);
-//     }
-//   );
 
 async function run() {
   await client.indices.create({
@@ -276,4 +260,24 @@ async function run() {
   console.log(count);
 }
 
-run().catch(console.log);
+/**
+ * Check if index is already there
+ * If it is there delete it.
+ * In any case create the new index
+ */
+client.indices
+  .delete({
+    index: "sinhala_songs_index",
+  })
+  .then(
+    function (resp) {
+      console.log("Successful query!");
+      console.log(JSON.stringify(resp, null, 4));
+    },
+    function (err) {
+      console.log("No index found!");
+    }
+  )
+  .finally(() => {
+    run().catch(console.log);
+  });
