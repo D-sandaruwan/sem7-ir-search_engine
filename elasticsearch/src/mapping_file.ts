@@ -26,6 +26,23 @@ const client = new Client({
   },
 });
 
+/**
+ * Uncomment this if you want to remove the index
+ */
+// client.indices
+//   .delete({
+//     index: "sinhala_songs_index",
+//   })
+//   .then(
+//     function (resp) {
+//       console.log("Successful query!");
+//       console.log(JSON.stringify(resp, null, 4));
+//     },
+//     function (err) {
+//       console.trace(err.message);
+//     }
+//   );
+
 async function run() {
   await client.indices.create({
     index: "sinhala_songs_index",
@@ -79,6 +96,10 @@ async function run() {
       },
       mappings: {
         properties: {
+          /**
+           * Specify the main parameters
+           * including full text search
+           */
           Composer_Sinhala: {
             type: "text",
             fields: {
@@ -196,6 +217,10 @@ async function run() {
             },
             analyzer: "my_icu_analyzer",
           },
+          /**
+           * Specify tother parameters
+           * without full text search
+           */
           Lyrics: {
             type: "text",
           },
@@ -209,7 +234,7 @@ async function run() {
             type: "text",
           },
           Spotify_Plays: {
-            type: "text",
+            type: "integer",
           },
         },
       },

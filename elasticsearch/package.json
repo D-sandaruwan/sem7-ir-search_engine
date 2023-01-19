@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "index": "node dist/src/mapping_file.js"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
